@@ -1,5 +1,5 @@
 mod samples;
-use samples::cube_samples::sample_animation_simple;
+use samples::cube_samples::*;
 
 fn main() {
     sample_animation_simple(16);
