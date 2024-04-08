@@ -2,7 +2,7 @@
 
 This is a simple reimplementation of Servet Gulnaroglu's ([@servetgulnaroglu](https://github.com/servetgulnaroglu)) `cube.c` program.
 
-![A GIF of a spinning ASCII cube in the terminal](cube_rs.gif)
+![A GIF of a spinning ASCII cube in the terminal](meta/cube_rs.gif)
 
 You can see the repository with the original source code [here](https://github.com/servetgulnaroglu/cube.c), or watch the YouTube video where he coded it [here](https://youtu.be/p09i_hoFdd0).
 
