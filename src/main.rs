@@ -1,4 +1,4 @@
-mod samples;
+mod samples { pub mod cube_samples; }
 use samples::cube_samples::*;
 
 fn main() {
