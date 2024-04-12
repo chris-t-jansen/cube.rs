@@ -25,17 +25,23 @@ impl Cube {
         }
     }
 
+    // Sets the positional offset of the cube on the screen, with (0, 0) being in the center.
+    // Negative values move the cube up and left, while positive values move the cube down and right.
     pub fn set_offset(&mut self, horizontal_offset: f32, vertical_offset: f32) {
         self.horizontal_offset = horizontal_offset;
         self.vertical_offset = vertical_offset;
     }
 
+    // Rotates the cube a set ammount. You can pass 0.0 to any of the parameters
+    // to not rotate the cube along that axis.
     pub fn rotate(&mut self, x: f32, y: f32, z: f32) {
         self.x_rotation += x;
         self.y_rotation += y;
         self.z_rotation += z;
     }
 
+    // Writes the cube's current position and rotation to the screen.
+    // Should be called every frame.
     pub fn render_frame(&self, screen: &mut Screen, point_data: &mut Point) {
         let float_size: f32 = self.size as f32;
         let mut x_val: f32 = -float_size;
@@ -45,6 +51,8 @@ impl Cube {
             y_val = -float_size;
 
             while y_val < float_size {
+                // You can change the characters used to render each side by
+                // changing the char values passed to the functions here.
                 self.render_surface(x_val, y_val, -float_size, '@', screen, point_data);    // Front face
                 self.render_surface(-x_val, y_val, float_size, '#', screen, point_data);    // Back face
 
@@ -71,9 +79,16 @@ impl Cube {
         point_data.x_projection = ((screen.width as f32) / 2.0 + self.horizontal_offset + 40.0 * point_data.z_inverse * point_data.x_coord * 2.0).trunc() as i32;
         point_data.y_projection = ((screen.height as f32) / 2.0 + self.vertical_offset + 40.0 * point_data.z_inverse * point_data.y_coord).trunc() as i32;
 
+        // Only draws the point if it's not off the screen in the negative direction. 
         if point_data.x_projection.is_positive() && point_data.y_projection.is_positive() {
+
+            // A `usize` type can't be negative, so the negative values are checked in the above `if` statement
             point_data.buffer_index = (point_data.x_projection as usize) + (point_data.y_projection as usize) * screen.width;
+
+            // Only draws the point if it's not off the screen in the positive direction.
             if point_data.buffer_index < (screen.width * screen.height) {
+
+                // Only daws the point if it's closer to the camera than the existing point there.
                 if point_data.z_inverse > screen.z_buffer[point_data.buffer_index] {
                     screen.text_buffer[point_data.buffer_index] = surface_char;
                     screen.z_buffer[point_data.buffer_index] = point_data.z_inverse;
@@ -135,6 +150,8 @@ pub struct Screen {
 
 impl Screen {
     pub fn new(width: usize, height: usize, increment: f32) -> Self {
+        print!("\x1b[2J");
+        
         Screen {
             width,
             height,
@@ -146,10 +163,12 @@ impl Screen {
         }
     }
 
+    // Prints the frame to the terminal
     pub fn print_frame(&self) {
         print!("\x1b[H");
 
         for k in 0..(self.width * self.height) {
+            // The buffers are linear, so linebreaks are inserted when the frame is printed.
             match k % self.width {
                 0 => print!("\n"),
                 1.. => print!("{}", self.text_buffer[k])
@@ -157,6 +176,7 @@ impl Screen {
         }
     }
 
+    // Resets the buffers to blank the screen, preventing "burn-in" of the points closest to the camera
     pub fn reset_buffers(&mut self) {
         for i in 0..self.width * self.height {
             self.text_buffer[i] = ' ';

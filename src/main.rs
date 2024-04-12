@@ -7,4 +7,6 @@ fn main() {
     // sample_animation_complex(16);
 
     // sample_animation_spins(16);
+
+    // sample_animation_slide(16);
 }
