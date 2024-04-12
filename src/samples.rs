@@ -102,4 +102,27 @@ pub mod cube_samples {
             sleep(Duration::from_millis(frame_delay_ms))
         }
     }
+
+    // Renders a single spinning cube that moves back and forth across the screen.
+    pub fn sample_animation_slide(frame_delay_ms: u64) {
+        let mut cube = Cube::new(20, 100);
+        let mut screen = Screen::new(160, 44, 0.6);
+        let mut point = Point::new();
+
+        let mut x_offset: f32 = 0.0;
+        let movement_speed: f32 = 0.05;
+
+        loop {
+            cube.render_frame(&mut screen, &mut point);
+            screen.print_frame();
+
+            cube.rotate(0.05, 0.05, 0.01);
+
+            x_offset += movement_speed;
+            cube.set_offset(x_offset.sin() * 50.0, 0.0);
+
+            screen.reset_buffers();
+            sleep(Duration::from_millis(frame_delay_ms))
+        }
+    }
 }
